@@ -1,0 +1,16 @@
+{
+  "name": "chiffres-et-lettres",
+  "version": "1.0.0",
+  "description": "Une version moderne du jeu télévisé « Des Chiffres et des Lettres », jouable dans le navigateur.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "start": "node scripts/serve.js",
+    "test": "node --test \"tests/*.test.js\""
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": ["jeu", "game", "des-chiffres-et-des-lettres", "countdown", "javascript", "pwa"]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Des Chiffres et des Lettres",
+  "short_name": "C&L",
+  "description": "Le mot le plus long et le compte est bon, dans votre navigateur.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0d2326",
+  "theme_color": "#0d2326",
+  "lang": "fr",
+  "icons": [
+    { "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

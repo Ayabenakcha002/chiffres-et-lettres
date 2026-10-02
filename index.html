@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="fr" data-theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Des Chiffres et des Lettres</title>
+  <meta name="description" content="Une version moderne du jeu télévisé « Des Chiffres et des Lettres » : le mot le plus long et le compte est bon, dans votre navigateur.">
+  <meta name="theme-color" content="#0d2326">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <button class="brand" id="btn-home" type="button" aria-label="Retour au menu">
+      <span class="brand-mark" aria-hidden="true">C<small>&amp;</small>L</span>
+      <span class="brand-text">Des Chiffres<br>et des Lettres</span>
+    </button>
+    <nav class="tools" aria-label="Outils">
+      <button class="icon-btn" id="btn-rules" type="button" title="Règles du jeu" aria-label="Règles du jeu">?</button>
+      <button class="icon-btn" id="btn-sound" type="button" title="Son" aria-label="Activer ou couper le son" aria-pressed="true">♪</button>
+      <button class="icon-btn" id="btn-theme" type="button" title="Thème" aria-label="Changer de thème">◐</button>
+      <button class="icon-btn" id="btn-settings" type="button" title="Réglages" aria-label="Réglages">⚙</button>
+    </nav>
+  </header>
+
+  <main>
+    <p id="loading" class="loading" role="status">Chargement du dictionnaire…</p>
+
+    <!-- MENU -->
+    <section id="view-menu" class="view" hidden>
+      <h1 class="hero">Deux épreuves.<br><em>Un seul champion.</em></h1>
+      <p class="lead">Trouvez le mot le plus long, faites le compte juste, et battez l'ordinateur.</p>
+      <div class="cards">
+        <button class="card card-series" id="start-series" type="button">
+          <span class="card-icon" aria-hidden="true">★</span>
+          <span class="card-title">Partie complète</span>
+          <span class="card-desc">6 manches : lettres et chiffres, face à l'ordinateur.</span>
+        </button>
+        <button class="card" id="start-letters" type="button">
+          <span class="card-icon" aria-hidden="true">Aa</span>
+          <span class="card-title">Le mot le plus long</span>
+          <span class="card-desc">10 lettres, 30 secondes.</span>
+        </button>
+        <button class="card" id="start-numbers" type="button">
+          <span class="card-icon" aria-hidden="true">12</span>
+          <span class="card-title">Le compte est bon</span>
+          <span class="card-desc">6 nombres, 1 cible, 60 secondes.</span>
+        </button>
+      </div>
+      <p id="stats-line" class="stats-line"></p>
+    </section>
+
+    <!-- LETTRES -->
+    <section id="view-letters" class="view" hidden>
+      <div class="roundbar">
+        <span class="round-label" id="l-round"></span>
+        <span class="score-pill">Toi <b id="l-score">0</b></span>
+        <span class="score-pill machine">Ordi <b id="l-machine">0</b></span>
+      </div>
+      <div class="timer" id="l-timer" role="timer" aria-live="off"></div>
+      <p class="hint" id="l-hint"></p>
+      <div class="rack" id="l-rack" aria-label="Tirage de lettres"></div>
+      <div class="actions" id="l-draw-actions">
+        <button class="btn" id="l-vowel" type="button">Voyelle</button>
+        <button class="btn" id="l-consonant" type="button">Consonne</button>
+        <button class="btn btn-ghost" id="l-random" type="button">Tirage aléatoire</button>
+      </div>
+      <div id="l-play" hidden>
+        <div class="word" id="l-word" aria-live="polite"></div>
+        <div class="actions">
+          <button class="btn btn-ghost" id="l-clear" type="button">Effacer</button>
+          <button class="btn btn-ghost" id="l-shuffle" type="button">Mélanger</button>
+          <button class="btn btn-primary" id="l-submit" type="button">Valider</button>
+        </div>
+      </div>
+      <div class="result" id="l-result" hidden></div>
+    </section>
+
+    <!-- CHIFFRES -->
+    <section id="view-numbers" class="view" hidden>
+      <div class="roundbar">
+        <span class="round-label" id="n-round"></span>
+        <span class="score-pill">Toi <b id="n-score">0</b></span>
+        <span class="score-pill machine">Ordi <b id="n-machine">0</b></span>
+      </div>
+      <div class="timer" id="n-timer" role="timer" aria-live="off"></div>
+      <div class="target-wrap">
+        <span class="target-label">Cible</span>
+        <div class="target" id="n-target" aria-live="polite">---</div>
+      </div>
+      <p class="hint" id="n-hint"></p>
+      <div class="actions" id="n-draw-actions">
+        <span class="actions-label">Grands nombres :</span>
+        <button class="btn btn-sm" data-large="0" type="button">0</button>
+        <button class="btn btn-sm" data-large="1" type="button">1</button>
+        <button class="btn btn-sm" data-large="2" type="button">2</button>
+        <button class="btn btn-sm" data-large="3" type="button">3</button>
+        <button class="btn btn-sm" data-large="4" type="button">4</button>
+        <button class="btn btn-ghost btn-sm" data-large="random" type="button">Hasard</button>
+      </div>
+      <div class="tiles" id="n-tiles" aria-label="Nombres disponibles"></div>
+      <div id="n-play" hidden>
+        <div class="ops" role="group" aria-label="Opérations">
+          <button class="op" data-op="+" type="button" aria-label="plus">+</button>
+          <button class="op" data-op="−" type="button" aria-label="moins">−</button>
+          <button class="op" data-op="×" type="button" aria-label="fois">×</button>
+          <button class="op" data-op="÷" type="button" aria-label="divisé par">÷</button>
+        </div>
+        <ol class="history" id="n-history" aria-label="Opérations effectuées"></ol>
+        <div class="actions">
+          <button class="btn btn-ghost" id="n-undo" type="button">Annuler</button>
+          <button class="btn btn-ghost" id="n-reset" type="button">Recommencer</button>
+          <button class="btn btn-primary" id="n-submit" type="button">Valider</button>
+        </div>
+      </div>
+      <div class="result" id="n-result" hidden></div>
+    </section>
+
+    <!-- FIN DE PARTIE -->
+    <section id="view-final" class="view" hidden>
+      <h2 class="hero" id="f-title"></h2>
+      <div class="final-scores">
+        <div class="final-box"><span>Toi</span><b id="f-player">0</b></div>
+        <div class="final-box machine"><span>Ordinateur</span><b id="f-machine">0</b></div>
+      </div>
+      <ul class="breakdown" id="f-breakdown"></ul>
+      <div class="actions">
+        <button class="btn btn-primary" id="f-again" type="button">Rejouer</button>
+        <button class="btn btn-ghost" id="f-menu" type="button">Menu</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Projet open source (MIT) · Dictionnaire : <a href="https://github.com/words/an-array-of-french-words" target="_blank" rel="noopener">an-array-of-french-words</a></span>
+  </footer>
+
+  <dialog id="dlg-rules" class="dialog">
+    <form method="dialog">
+      <h2>Règles du jeu</h2>
+      <h3>Le mot le plus long</h3>
+      <p>Choisissez 10 lettres (au moins 2 voyelles et 2 consonnes), puis formez le mot le plus long possible avant la fin du temps. 1 point par lettre ; les mots de 9 et 10 lettres comptent double. Le mot doit exister dans le dictionnaire.</p>
+      <h3>Le compte est bon</h3>
+      <p>Atteignez le nombre cible avec 6 nombres et les 4 opérations (+ − × ÷). Chaque nombre n'est utilisé qu'une fois, et les résultats intermédiaires doivent être des entiers positifs. Exact : 10 points · à 5 près : 7 · à 10 près : 5.</p>
+      <h3>Clavier</h3>
+      <p>Lettres : tapez le mot, <kbd>Retour arrière</kbd> pour corriger, <kbd>Entrée</kbd> pour valider.</p>
+      <button class="btn btn-primary">Compris</button>
+    </form>
+  </dialog>
+
+  <dialog id="dlg-settings" class="dialog">
+    <form method="dialog">
+      <h2>Réglages</h2>
+      <label class="field">Temps pour les lettres
+        <select id="set-letter-time">
+          <option value="20">20 secondes</option>
+          <option value="30">30 secondes</option>
+          <option value="45">45 secondes</option>
+          <option value="60">60 secondes</option>
+        </select>
+      </label>
+      <label class="field">Temps pour les chiffres
+        <select id="set-number-time">
+          <option value="45">45 secondes</option>
+          <option value="60">60 secondes</option>
+          <option value="90">90 secondes</option>
+          <option value="120">120 secondes</option>
+        </select>
+      </label>
+      <div class="dialog-actions">
+        <button class="btn btn-ghost" id="set-reset" value="cancel">Effacer mes records</button>
+        <button class="btn btn-primary">Fermer</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <noscript><p class="loading">Ce jeu nécessite JavaScript.</p></noscript>
+</body>
+</html>
